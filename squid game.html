@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#100d20">
+    <title>THE LAST ROUND — Neon Arena</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+        *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#090914;color:#f7eef4}body{display:grid;place-items:center;overflow:hidden;font-family:'Space Mono',monospace}.stage{position:relative;width:min(100vw,62.5vh);height:min(100vh,160vw);aspect-ratio:3/4;overflow:hidden;background:#101021;box-shadow:0 0 100px #ff2b7930}canvas{position:absolute;inset:0;width:100%;height:100%}.hud{position:absolute;inset:0;pointer-events:none;padding:7.2% 7%;display:flex;flex-direction:column;justify-content:space-between}.topline,.bottomline{display:flex;justify-content:space-between;align-items:center;text-transform:uppercase;letter-spacing:.15em;font-size:clamp(7px,1vw,12px);color:#ffc1d7}.brand{font-weight:bold;color:#fff;letter-spacing:.25em}.serial{opacity:.7}.title{position:absolute;top:7%;left:0;width:100%;text-align:center;font:900 clamp(46px,10vw,112px)/.8 'Barlow Condensed',sans-serif;letter-spacing:.055em;color:#fff2eb;text-shadow:0 3px 0 #ff3981,0 0 34px #ff398188}.title em{font-style:normal;color:#ff4d89}.subtitle{position:absolute;top:19%;width:100%;text-align:center;font-size:clamp(7px,1.05vw,12px);letter-spacing:.4em;color:#f7a9c6}.bottom-title{font:800 clamp(24px,4.8vw,54px)/.9 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#fff0e9;text-shadow:0 0 22px #ff4b8c88}.bottomline small{font-size:8px;color:#ffa9c5;letter-spacing:.14em}.hint{position:absolute;right:7%;bottom:13%;font-size:8px;color:#ff8fb3;writing-mode:vertical-rl;letter-spacing:.24em;opacity:.7}.vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#09091470,transparent 28%,transparent 68%,#090914c9),radial-gradient(ellipse at center,transparent 48%,#08081399 100%)}.grain{position:absolute;inset:0;opacity:.11;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}.frame{position:absolute;inset:3%;border:1px solid #ff6d9b45;pointer-events:none}.frame:before,.frame:after{content:'';position:absolute;width:20px;height:20px;border-color:#ff6d9b;opacity:.7}.frame:before{left:-1px;top:-1px;border-left:2px solid;border-top:2px solid}.frame:after{right:-1px;bottom:-1px;border-right:2px solid;border-bottom:2px solid}@media(max-aspect-ratio:3/4){.stage{width:100vw;height:100vh;aspect-ratio:auto}}
+    </style></head>
+<body><main class="stage" aria-label="Animated Squid Game inspired neon poster">
+    <canvas id="art"></canvas><div class="hud"><div class="topline"><span class="brand">◉ &nbsp; HWA-DONG / 01</span><span class="serial">NO. 456 — FINAL ROUND</span></div><div class="bottomline"><div><div class="bottom-title">PLAY NICE.<br>PLAY TO WIN.</div><small>THE ARENA IS WATCHING</small></div><small>THE LAST<br>ROUND&nbsp; / &nbsp;∞</small></div></div>
+    <div class="title">SQUID <em>GAME</em></div><div class="subtitle">ONE NIGHT &nbsp;·&nbsp; ONE CHANCE &nbsp;·&nbsp; NO EXIT</div><div class="hint">MOVE YOUR CURSOR &nbsp; / &nbsp; WAKE THE LIGHTS</div><div class="vignette"></div><div class="grain"></div><div class="frame"></div>
+</main><script>
+    (()=>{
+        const c=document.querySelector('#art'),x=c.getContext('2d'),stage=document.querySelector('.stage');let W=0,H=0,dpr=1,t=0,mx=.5,my=.5;
+        const rnd=(a,b)=>a+Math.random()*(b-a);
+        function resize(){const r=stage.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)}
+        addEventListener('resize',resize);stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();mx=(e.clientX-r.left)/r.width;my=(e.clientY-r.top)/r.height});resize();
+        const motes=Array.from({length:70},()=>({x:Math.random(),y:Math.random(),r:rnd(.5,2),v:rnd(.00008,.00035),p:rnd(0,7)}));
+        function line(points,color,w=2){x.beginPath();points.forEach(([a,b],i)=>i?x.lineTo(a,b):x.moveTo(a,b));x.strokeStyle=color;x.lineWidth=w;x.stroke()}
+        function poly(points,fill,stroke){x.beginPath();points.forEach(([a,b],i)=>i?x.lineTo(a,b):x.moveTo(a,b));x.closePath();x.fillStyle=fill;x.fill();if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.stroke()}}
+        function draw(t0){t=t0*.001;const w=W,h=H;x.clearRect(0,0,w,h);
+// Deep plum sky and luminous moon
+            let bg=x.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#111125');bg.addColorStop(.55,'#23152e');bg.addColorStop(1,'#080d19');x.fillStyle=bg;x.fillRect(0,0,w,h);
+            const cx=w*(.5+(mx-.5)*.025),cy=h*.405;let halo=x.createRadialGradient(cx,cy,2,cx,cy,w*.52);halo.addColorStop(0,'#fc428944');halo.addColorStop(.35,'#ec2e7040');halo.addColorStop(1,'#ed2e7000');x.fillStyle=halo;x.fillRect(0,0,w,h);
+// Floating architectural planes
+            poly([[0,h*.58],[w*.18,h*.39],[w*.37,h*.6],[w*.53,h*.4],[w*.73,h*.61],[w*.91,h*.43],[w,h*.54],[w,h],[0,h]],'#171a2b');
+// Escher staircases with rose-lit edges
+            for(let side=0;side<2;side++){x.save();if(side){x.translate(w,0);x.scale(-1,1)}const sy=h*.58, sx=0, steps=5;for(let i=0;i<steps;i++){const xx=sx+i*w*.105, yy=sy-i*h*.047, ww=w*.145, hh=h*.065;x.fillStyle=['#287f83','#306d81','#3d5e83','#5a4b80','#75436f'][i];x.fillRect(xx,yy,ww,hh);line([[xx,yy],[xx+ww,yy]],'#f48bb7aa',2);line([[xx+ww,yy],[xx+ww,yy+hh]],'#ff86ad44',1)}x.restore()}
+// Big ring sigil, rays, and orbit
+            x.save();x.translate(cx,cy);x.rotate(Math.sin(t*.22)*.04);x.shadowBlur=25;x.shadowColor='#ff397e';x.strokeStyle='#ff5a91';x.lineWidth=2;x.globalAlpha=.55;x.beginPath();x.arc(0,0,w*.295,0,Math.PI*2);x.stroke();x.setLineDash([4,8]);x.beginPath();x.arc(0,0,w*.32,t*.12,t*.12+Math.PI*1.55);x.stroke();x.setLineDash([]);for(let i=0;i<32;i++){let a=i*Math.PI/16, r=w*.31;x.beginPath();x.moveTo(Math.cos(a)*r,Math.sin(a)*r);x.lineTo(Math.cos(a)*(r+((i%4===0)?10:4)),Math.sin(a)*(r+((i%4===0)?10:4)));x.stroke()}x.restore();
+// geometric emblems
+            x.save();x.shadowBlur=15;x.shadowColor='#ff427f';x.strokeStyle='#ff74a2';x.lineWidth=2;const sy=h*.29;[[w*.17,sy,'circle'],[w*.83,sy+2,'square'],[w*.5,h*.325,'triangle']].forEach(([a,b,k])=>{x.beginPath();if(k==='circle')x.arc(a,b,Math.min(w,h)*.035,0,Math.PI*2);else if(k==='square')x.rect(a-15,b-15,30,30);else{x.moveTo(a,b-18);x.lineTo(a-18,b+15);x.lineTo(a+18,b+15);x.closePath()}x.stroke()});x.restore();
+// Guard silhouette, gently breathing
+            const breathe=Math.sin(t*1.3)*h*.004, gy=h*.49+breathe, head=w*.17;
+            let g=x.createRadialGradient(cx,gy,head*.2,cx,gy,head*1.25);g.addColorStop(0,'#fb548e77');g.addColorStop(1,'#fb548e00');x.fillStyle=g;x.beginPath();x.ellipse(cx,gy,head*1.25,head*1.3,0,0,Math.PI*2);x.fill();
+// cloak shoulders and hood
+            poly([[cx-head*.56,gy+head*.34],[cx-head*.95,gy+head*.65],[cx-head*1.18,gy+head*1.85],[cx+head*1.18,gy+head*1.85],[cx+head*.95,gy+head*.65],[cx+head*.56,gy+head*.34]],'#d92a68','#ff80a8');
+            let hood=x.createLinearGradient(cx-head,gy-head,cx+head,gy+head);hood.addColorStop(0,'#ff77a4');hood.addColorStop(.5,'#eb3d79');hood.addColorStop(1,'#b91d58');x.fillStyle=hood;x.beginPath();x.moveTo(cx-head*.9,gy+head*.52);x.quadraticCurveTo(cx-head*1.03,gy-head*1.25,cx,gy-head*1.36);x.quadraticCurveTo(cx+head*1.03,gy-head*1.25,cx+head*.9,gy+head*.52);x.closePath();x.fill();
+// faceplate
+            x.beginPath();x.moveTo(cx-head*.68,gy-head*.1);x.quadraticCurveTo(cx,gy-head*.39,cx+head*.68,gy-head*.1);x.lineTo(cx+head*.57,gy+head*.63);x.quadraticCurveTo(cx,gy+head*.91,cx-head*.57,gy+head*.63);x.closePath();x.fillStyle='#111523';x.fill();x.strokeStyle='#ff9fbd';x.lineWidth=2;x.stroke();
+// luminous triangle mark
+            x.save();x.shadowBlur=16;x.shadowColor='#ff4e8d';x.strokeStyle='#ff6d9c';x.lineWidth=3;x.beginPath();x.moveTo(cx,gy-head*.16);x.lineTo(cx-head*.27,gy+head*.39);x.lineTo(cx+head*.27,gy+head*.39);x.closePath();x.stroke();x.restore();
+// collar
+            poly([[cx-head*.38,gy+head*.79],[cx,gy+head*1.02],[cx+head*.38,gy+head*.79],[cx+head*.28,gy+head*1.22],[cx-head*.28,gy+head*1.22]],'#28192d','#ff76a0');
+// Player with lantern-like number patch
+            const py=h*.77, ph=h*.105, pw=w*.08; x.fillStyle='#060a13aa';x.beginPath();x.ellipse(cx,py+ph*1.72,pw*1.7,ph*.18,0,0,Math.PI*2);x.fill();
+            x.fillStyle='#d69b79';x.beginPath();x.arc(cx,py,pw*.32,0,Math.PI*2);x.fill();x.fillStyle='#171520';x.beginPath();x.arc(cx,py-pw*.04,pw*.34,Math.PI,Math.PI*2);x.fill();
+            poly([[cx-pw*.44,py+pw*.38],[cx+pw*.44,py+pw*.38],[cx+pw*.56,py+ph],[cx-pw*.56,py+ph]],'#148b80','#9cf0d0');line([[cx-pw*.25,py+ph*1.01],[cx-pw*.34,py+ph*1.55]],'#101725',pw*.16);line([[cx+pw*.25,py+ph*1.01],[cx+pw*.34,py+ph*1.55]],'#101725',pw*.16);
+            x.fillStyle='#0a716b';x.fillRect(cx-pw*.25,py+pw*.52,pw*.5,pw*.28);x.fillStyle='#fff3e9';x.font=`bold ${Math.max(8,pw*.18)}px monospace`;x.textAlign='center';x.fillText('456',cx,py+pw*.71);
+// drifting fireflies
+            for(const p of motes){p.y-=p.v;if(p.y<-.02){p.y=1.02;p.x=Math.random()}const a=.25+.55*(.5+.5*Math.sin(t*1.5+p.p));x.fillStyle=`rgba(255,150,190,${a})`;x.beginPath();x.arc(p.x*w,p.y*h,p.r,0,Math.PI*2);x.fill()}
+// cursor-following searchlight
+            const lx=w*mx,ly=h*my;x.save();x.globalAlpha=.13;x.fillStyle='#ffa5c7';x.beginPath();x.arc(lx,ly,w*.11,0,Math.PI*2);x.fill();x.restore();
+            requestAnimationFrame(draw)}requestAnimationFrame(draw);
+    })();
+</script></body></html>
